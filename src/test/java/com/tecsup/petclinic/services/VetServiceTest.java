@@ -266,4 +266,57 @@ public class VetServiceTest {
             assertTrue(true);
         }
     }
+
+    /**
+     * PRUEBA DE INTEGRACION - Busquedas multiples
+     * Autor: gmarko-dV
+     */
+    @Test
+    public void testIntegrationVetSearchOperations() {
+        
+        // Crear veterinario
+        VetDTO nuevoVet = VetDTO.builder()
+                .firstName("Ana")
+                .lastName("Martinez")
+                .email("ana.martinez@petclinic.com")
+                .phone("6085554444")
+                .active(true)
+                .build();
+
+        VetDTO vetCreado = this.vetService.create(nuevoVet);
+        Integer idVet = vetCreado.getId();
+        assertNotNull(idVet);
+
+        // Buscar por nombre
+        List<VetDTO> vetsPorNombre = this.vetService.findByFirstName("Ana");
+        assertTrue(vetsPorNombre.size() >= 1);
+        boolean encontrado = vetsPorNombre.stream()
+                .anyMatch(v -> v.getId().equals(idVet));
+        assertTrue(encontrado);
+
+        // Buscar por apellido
+        List<VetDTO> vetsPorApellido = this.vetService.findByLastName("Martinez");
+        assertTrue(vetsPorApellido.size() >= 1);
+        boolean encontradoApellido = vetsPorApellido.stream()
+                .anyMatch(v -> v.getId().equals(idVet));
+        assertTrue(encontradoApellido);
+
+        // Verificar datos
+        VetDTO vetVerificado = null;
+        try {
+            vetVerificado = this.vetService.findById(idVet);
+        } catch (VetNotFoundException e) {
+            fail("Error: " + e.getMessage());
+        }
+
+        assertEquals("Ana", vetVerificado.getFirstName());
+        assertEquals("Martinez", vetVerificado.getLastName());
+
+        // Limpiar
+        try {
+            this.vetService.delete(idVet);
+        } catch (VetNotFoundException e) {
+            fail("Error al eliminar: " + e.getMessage());
+        }
+    }
 }
