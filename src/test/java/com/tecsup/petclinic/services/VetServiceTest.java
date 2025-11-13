@@ -201,10 +201,8 @@ public class VetServiceTest {
     }
 
     /**
-     * PRUEBA DE INTEGRACIÓN - Flujo completo CRUD de veterinario
-     * Autor: [Tu nombre]
-     * Descripción: Prueba que valida el ciclo completo de vida de un veterinario:
-     * crear, buscar, actualizar y eliminar
+     * PRUEBA DE INTEGRACION - Flujo completo CRUD de veterinario
+     * Jhon Boza
      */
     @Test
     public void testIntegrationCompleteVetLifecycle() {
@@ -269,7 +267,7 @@ public class VetServiceTest {
 
     /**
      * PRUEBA DE INTEGRACION - Busquedas multiples
-     * Autor: gmarko-dV
+     * gmarko-dV
      */
     @Test
     public void testIntegrationVetSearchOperations() {
@@ -322,7 +320,7 @@ public class VetServiceTest {
 
     /**
      * PRUEBA DE INTEGRACION - Validacion estado activo/inactivo
-     * Autor: Vasquezcito17
+     * Vasquezc
      */
     @Test
     public void testIntegrationVetActiveStatus() {
