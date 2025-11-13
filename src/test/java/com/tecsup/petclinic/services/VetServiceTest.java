@@ -319,4 +319,49 @@ public class VetServiceTest {
             fail("Error al eliminar: " + e.getMessage());
         }
     }
+
+    /**
+     * PRUEBA DE INTEGRACION - Validacion estado activo/inactivo
+     * Autor: Vasquezcito17
+     */
+    @Test
+    public void testIntegrationVetActiveStatus() {
+        
+        // Crear veterinario activo
+        VetDTO vetActivo = VetDTO.builder()
+                .firstName("Luis")
+                .lastName("Rodriguez")
+                .email("luis.rodriguez@petclinic.com")
+                .phone("6085555555")
+                .active(true)
+                .build();
+
+        VetDTO creado = this.vetService.create(vetActivo);
+        Integer id = creado.getId();
+        
+        assertEquals(true, creado.getActive());
+
+        // Cambiar a inactivo
+        creado.setActive(false);
+        VetDTO actualizado = this.vetService.update(creado);
+        
+        assertEquals(false, actualizado.getActive());
+
+        // Verificar cambio persistido
+        VetDTO verificado = null;
+        try {
+            verificado = this.vetService.findById(id);
+        } catch (VetNotFoundException e) {
+            fail("Error: " + e.getMessage());
+        }
+
+        assertEquals(false, verificado.getActive());
+
+        // Limpiar
+        try {
+            this.vetService.delete(id);
+        } catch (VetNotFoundException e) {
+            fail("Error al eliminar: " + e.getMessage());
+        }
+    }
 }
