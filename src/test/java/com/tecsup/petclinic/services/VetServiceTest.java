@@ -199,4 +199,71 @@ public class VetServiceTest {
             assertTrue(true);
         }
     }
+
+    /**
+     * PRUEBA DE INTEGRACIÓN - Flujo completo CRUD de veterinario
+     * Autor: [Tu nombre]
+     * Descripción: Prueba que valida el ciclo completo de vida de un veterinario:
+     * crear, buscar, actualizar y eliminar
+     */
+    @Test
+    public void testIntegrationCompleteVetLifecycle() {
+        
+        // 1. CREAR un veterinario
+        VetDTO nuevoVet = VetDTO.builder()
+                .firstName("Carlos")
+                .lastName("Garcia")
+                .email("carlos.garcia@petclinic.com")
+                .phone("6085553333")
+                .active(true)
+                .build();
+
+        VetDTO vetCreado = this.vetService.create(nuevoVet);
+        log.info("Veterinario creado: " + vetCreado);
+
+        assertNotNull(vetCreado.getId());
+        assertEquals("Carlos", vetCreado.getFirstName());
+        Integer idVet = vetCreado.getId();
+
+        // 2. BUSCAR el veterinario por ID
+        VetDTO vetEncontrado = null;
+        try {
+            vetEncontrado = this.vetService.findById(idVet);
+            log.info("Veterinario encontrado: " + vetEncontrado);
+        } catch (VetNotFoundException e) {
+            fail("No se encontró el veterinario: " + e.getMessage());
+        }
+
+        assertEquals("Carlos", vetEncontrado.getFirstName());
+        assertEquals("Garcia", vetEncontrado.getLastName());
+
+        // 3. ACTUALIZAR el veterinario
+        vetEncontrado.setLastName("Garcia-Lopez");
+        vetEncontrado.setEmail("carlos.garcialopez@petclinic.com");
+        vetEncontrado.setActive(false);
+
+        VetDTO vetActualizado = this.vetService.update(vetEncontrado);
+        log.info("Veterinario actualizado: " + vetActualizado);
+
+        assertEquals("Garcia-Lopez", vetActualizado.getLastName());
+        assertEquals("carlos.garcialopez@petclinic.com", vetActualizado.getEmail());
+        assertEquals(false, vetActualizado.getActive());
+
+        // 4. ELIMINAR el veterinario
+        try {
+            this.vetService.delete(idVet);
+            log.info("Veterinario eliminado correctamente");
+        } catch (VetNotFoundException e) {
+            fail("Error al eliminar: " + e.getMessage());
+        }
+
+        // 5. VERIFICAR que fue eliminado
+        try {
+            this.vetService.findById(idVet);
+            fail("El veterinario no debería existir después de eliminarlo");
+        } catch (VetNotFoundException e) {
+            log.info("Confirmado: el veterinario fue eliminado correctamente");
+            assertTrue(true);
+        }
+    }
 }
